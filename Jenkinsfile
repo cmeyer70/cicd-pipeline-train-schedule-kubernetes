@@ -24,29 +24,6 @@ pipeline {
                     }
                 }
             }
-        }
-        stage('Push Docker Image') {
-            when {
-                branch 'master'
-            }
-            steps {
-                script {
-                    docker.withRegistry('https://repository.rnd.amadeus.net:5000', 'artifactory_login') {
-                        app.push("${env.BUILD_NUMBER}")
-                        app.push("latest")
-                    }
-                }
-            }
-        }
-        stage('DeployToProduction') {
-            when {
-                branch 'master'
-            }
-            steps {
-                input 'Deploy to Production?'
-                milestone(1)
-                //implement Kubernetes deployment here
-            }
-        }
+        }        
     }
 }
