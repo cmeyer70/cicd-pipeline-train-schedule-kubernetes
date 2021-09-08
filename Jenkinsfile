@@ -1,11 +1,10 @@
 pipeline {
     agent any
     environment {
-        //be sure to replace "willbla" with your own Docker Hub username
         DOCKER_IMAGE_NAME = "christophe.meyer/train-schedule"
     }
     stages {
-               stage('Build') {
+        stage('Build') {
             steps {
                 echo 'Running build automation'
                 sh './gradlew build --no-daemon'
@@ -18,7 +17,7 @@ pipeline {
             }
             steps {
                 script {
-                    app = docker.build("willbla/train-schedule")
+                    app = docker.build("christophe.meyer/train-schedule")
                     app.inside {
                         sh 'echo $(curl localhost:8080)'
                     }
@@ -31,7 +30,7 @@ pipeline {
             }
             steps {
                 script {
-                    docker.withRegistry('https://registry.hub.docker.com', 'docker_hub_login') {
+                    docker.withRegistry('https://repository.rnd.amadeus.net:5000', 'docker_hub_login') {
                         app.push("${env.BUILD_NUMBER}")
                         app.push("latest")
                     }
